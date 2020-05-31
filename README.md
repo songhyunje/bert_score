@@ -1,4 +1,4 @@
-### BERT Score using ETRI BERT (WIP)
+### BERT Score for Korean sentence using ETRI BERT (WIP)
 
 PyTorch implementation for BERT Score
 
