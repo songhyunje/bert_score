@@ -27,14 +27,23 @@ vocab.txt의 전체 개수가 큰 의미가 없어 제거하였음. 따라서, �
 #### 사용법
 ```python
 from bert_scorer import BertScorer
+from utils import get_idf_dict
 
 path = 'path'  # ETRI BERT resource path
-scorer = BertScorer(path)
+scorer = BertScorer(path, batch_size=16)
 
 hyps = ["'렘데시비르' 국내 들여온다...\"중증 환자에 투여\"", "\"국민 프로듀싱을 모의로\"...'프로듀스101' 투표 조작 피디 실형"]
 refs = ["'프듀 투표조작' PD 두명에 실형 선고", "'프로듀스 투표조작' 안준영 PD 1심 징역 2년...\"시청자 믿음 저버렸다\""]
-print(scorer.score(hyps, refs))
+scores = scorer.score(hyps, refs)
+print(scores)
+
+# add idf scores
+idf_dict_ref = get_idf_dict(refs, scorer.tokenizer)
+idf_dict_hyp = get_idf_dict(hyps, scorer.tokenizer)
+scores = scorer.score_batch(refs, hyps, idf_weight=True, idf_dict_ref=idf_dict_ref, idf_dict_hyp=idf_dict_hyp)
+print(scores)
 ```
 
 #### 수정할 사항
-- 현재 버전은 한 문장 단위로 처리. Batch 단위로 처리할 필요가 있음 (오리지날 코드는 batch로 처리함) 
+- Rscaling 추가
+- Moverscore를 추가
